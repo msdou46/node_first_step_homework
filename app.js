@@ -6,7 +6,7 @@ const port = 3000;
 const boardsRouter = require("./routes/board.js")
 const commentsRouter = require("./routes/comment.js")
 const connect = require("./schemas")
-connect();
+connect();  // 몽고DB 커넥트 시도 및 실행.
 
 // req.body 및 routes 를 use 하기.
 app.use(express.json());
