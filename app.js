@@ -1,0 +1,23 @@
+const express = require('express');    
+const app = express();   
+const port = 3000;
+
+// route 가져오기
+const boardsRouter = require("./routes/board.js")
+const commentsRouter = require("./routes/comment.js")
+const connect = require("./schemas")
+connect();
+
+// req.body 및 routes 를 use 하기.
+app.use(express.json());
+app.use("/boards", [boardsRouter]);
+app.use("/comments", [commentsRouter]);
+
+
+app.get('/', (req, res) => {
+    res.send('Hello World!');
+});
+
+app.listen(port, () => {
+    console.log(port, '포트로 서버가 열렸어요!');
+});
