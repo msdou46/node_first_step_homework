@@ -36,6 +36,11 @@ router.post("/", async (req, res) => {
 // 경로 : localhost:3000/boards/:boardId    특정 게시글의 상세 사항을 보여줌. 댓글이 있을 경우 댓글도 함께.
 router.get("/:boardId", async (req, res) => {
     const {boardId} = req.params;
+
+    if (Number.isNaN(boardId)) {
+        return res.status(400).send({message:"잘못된 ID 입니다."})
+    }
+    
     const getBoard = await Boards.find({boardId})       // [{}]
     const getComments = await Comments.find({boardId}); // 만약 없다면 [] 이렇게 빈 배열.
 
