@@ -23,8 +23,9 @@ router.post("/:boardId", async (req, res) => {
 
 // 경로 : localhost:3000/comments/:commentId        해당 댓글 수정
 router.put('/:commentId', async (req, res) => {
-    const {commentId} = req.params;
+    const commentId = Number(req.params["commentId"]);
     const {content} = req.body;
+    
     const existComment = await Comments.find({commentId})
 
     if (existComment.length) {

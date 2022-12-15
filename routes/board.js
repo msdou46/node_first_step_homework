@@ -35,19 +35,21 @@ router.post("/", async (req, res) => {
 
 // 경로 : localhost:3000/boards/:boardId    특정 게시글의 상세 사항을 보여줌. 댓글이 있을 경우 댓글도 함께.
 router.get("/:boardId", async (req, res) => {
-    const {boardId} = req.params;
+    const boardId = Number(req.params["boardId"]);   // Number() 를 사용했는데 문자열이 숫자가 아닌 글자다? NaN 반환. 
 
     if (Number.isNaN(boardId)) {
-        return res.status(400).send({message:"잘못된 ID 입니다."})
+        return res.status(400).send({success: false, message:"잘못된 ID 입니다"});
     }
-    
-    const getBoard = await Boards.find({boardId})       // [{}]
-    const getComments = await Comments.find({boardId}); // 만약 없다면 [] 이렇게 빈 배열.
 
+    const getBoard = await Boards.findOne({boardId})       // [{}]  findOne() 이라면 {}. 만약 없다면 null
+    const getComments = await Comments.find({boardId}); // 만약 없다면 [] 이렇게 빈 배열.
+                                                        // 찾는 값이 문자든 숫자든 상관 없어.
     const result = {};
 
-    if (getBoard.length) {
-        result["board"] = getBoard[0]
+    if (getBoard === null || getBoard === undefined) {
+        return res.status(400).json({success: false, message: "존재하지 않는 게시글입니다."})
+    } else {
+        result["board"] = getBoard
     }
     if (getComments.length) {
         result["comments"] = getComments
