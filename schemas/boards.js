@@ -8,8 +8,7 @@ const boardsSchema = new mongoose.Schema({
     },
     user: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     title: {
         type: String,

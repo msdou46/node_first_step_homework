@@ -8,8 +8,7 @@ const commentsSchema = new mongoose.Schema({
     },
     user: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     content: {
         type: String,
@@ -17,8 +16,7 @@ const commentsSchema = new mongoose.Schema({
     },
     boardId: {
         type: Number,
-        required: true,
-        unique: true
+        required: true
     },
     createdAt: {
         type: Date,

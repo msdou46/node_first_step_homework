@@ -22,15 +22,18 @@ router.get("/", async (req, res) => {
 
 // 경로 : localhost:3000/boards         계시글을 입력받아 DB에 저장
 router.post("/", async (req, res) => {
-    const {boardId, user, title, content} = req.body;
-    const checkId = await Boards.find({boardId});   // 있다면 [{}]
+    const {user, title, content} = req.body;
+    const last_board = await Boards.findOne().sort("-boardId").exec() // 있으면 {}, 없으면 null
+    let boardId = 0;
 
-    if (checkId.length) {
-        return res.status(400).json({success: false, errorMessage: "이미 존재하는 board_id 입니다"})
+    if (last_board) {
+        boardId = last_board["boardId"] + 1;
+    } else {
+        boardId = 1;
     }
 
     const createdBoard = await Boards.create({boardId, user, title, content})   // {} 형태.
-    res.json({message: "성공적으로 등록이 완료되었음", result: createdBoard})
+    res.json({message: "성공적으로 등록이 완료되었음"})
 })
 
 // 경로 : localhost:3000/boards/:boardId    특정 게시글의 상세 사항을 보여줌. 댓글이 있을 경우 댓글도 함께.
@@ -58,11 +61,12 @@ router.get("/:boardId", async (req, res) => {
     res.json({success: true, result: result});
 })
 
-// 경로 : localhost:3000/boards/:boardId        특정 게시글을 수정
+// 경로 : localhost:3000/boards/:boardId        특정 게시글을 수정. params 와 body 를 같이 받는다.
 router.put('/:boardId', async (req, res) => {
     const {boardId} = req.params;
     const {title, content} = req.body;
-    const getBoard = await Boards.find({boardId})   // 있다면 [{}], 없다면 []
+    const getBoard = await Boards.find({boardId})   
+                                // 있다면 [{}], 없다면 [].      findOne() 은 있다면 {}, 없다면 null
 
     if (getBoard.length) {
         await Boards.updateOne({boardId: boardId}, {$set: {title: title, content: content}});
