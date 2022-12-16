@@ -67,10 +67,8 @@ router.delete("/:commentId", async (req, res) => {
     const existComment = await Comments.find({commentId})   // 있으면 [{}],  없으면 []
 
     if (!existComment.length) {
-        console.log(existComment);
         return res.status(404).json({success: false, erorrMessage: "해당 댓글은 존재하지 않습니다."})
     } else {
-        console.log(existComment);
         await Comments.deleteOne({commentId})
     }
 
