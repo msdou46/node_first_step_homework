@@ -15,7 +15,7 @@ app.use("/comments", [commentsRouter]);
 
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.send("Hello World! I'm 김민수B(노드4기)");
 });
 
 app.listen(port, () => {
