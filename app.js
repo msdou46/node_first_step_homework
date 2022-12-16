@@ -3,7 +3,7 @@ const app = express();
 const port = 3000;
 
 // route 가져오기
-const boardsRouter = require("./routes/board.js")
+const boardsRouter = require("./routes/post.js")
 const commentsRouter = require("./routes/comment.js")
 const connect = require("./schemas")
 connect();  // 몽고DB 커넥트 시도 및 실행.
@@ -12,6 +12,8 @@ connect();  // 몽고DB 커넥트 시도 및 실행.
 app.use(express.json());
 app.use("/posts", [boardsRouter]);
 app.use("/comments", [commentsRouter]);
+
+app.use("/posts", [boardsRouter], [commentsRouter]);
 
 
 app.get('/', (req, res) => {

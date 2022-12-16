@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const boardsSchema = new mongoose.Schema({
-    boardId: {
+    postId: {
         type: Number,
         required: true,
         unique: true
@@ -24,4 +24,4 @@ const boardsSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model("boards", boardsSchema);
+module.exports = mongoose.model("posts", boardsSchema);

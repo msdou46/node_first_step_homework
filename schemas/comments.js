@@ -14,7 +14,7 @@ const commentsSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    boardId: {
+    postId: {
         type: Number,
         required: true
     },
