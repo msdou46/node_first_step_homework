@@ -10,9 +10,6 @@ connect();  // 몽고DB 커넥트 시도 및 실행.
 
 // req.body 및 routes 를 use 하기.
 app.use(express.json());
-app.use("/posts", [boardsRouter]);
-app.use("/comments", [commentsRouter]);
-
 app.use("/posts", [boardsRouter], [commentsRouter]);
 
 

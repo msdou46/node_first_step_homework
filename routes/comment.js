@@ -9,6 +9,7 @@ const Comments = require("../schemas/comments.js")
 // 미들웨어
 router.use("/:postId/comments/:commentId", async (req, res, next) => {
     // const method_type = req.method;
+
     const commentId = Number(req.params["commentId"]);   // Number() 를 사용했는데 문자열이 숫자가 아닌 글자다? NaN 반환. 
     if (Number.isNaN(commentId)) {
         return res.status(400).send({success: false, message:"데이터 형식이 올바르지 않습니다."});
