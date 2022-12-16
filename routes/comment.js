@@ -32,7 +32,7 @@ router.post("/:boardId", async (req, res) => {
     let commentId = 0;
 
     if (last_comment) {
-        commentId = last_comment["commentId"]
+        commentId = last_comment["commentId"] + 1
     } else {
         commentId = 1;
     }
