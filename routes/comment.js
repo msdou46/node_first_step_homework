@@ -6,20 +6,26 @@ const Boards = require("../schemas/boards.js")
 const Comments = require("../schemas/comments.js")
 
 
-// 경로 : localhost:3000/comments
-router.get("/", async (req, res) => {
-    res.json({});
+// 미들웨어
+router.use("/:id", async (req, res, next) => {
+    // const method_type = req.method;
+
+    const id = Number(req.params["id"]);   // Number() 를 사용했는데 문자열이 숫자가 아닌 글자다? NaN 반환. 
+    if (Number.isNaN(id)) {
+        return res.status(400).send({success: false, message:"데이터 형식이 올바르지 않습니다."});
+    } 
+    next();
 })
 
 
-// 경로 : localhost:3000/comments/:boardId         해당 게시글에 댓글 달기. 해당 api 는 params 와 body 를 다 받는다.
+// 경로 : localhost:3000/comments/:boardId     해당 게시글에 댓글 달기. 해당 api 는 params 와 body 를 다 받는다.
 router.post("/:boardId", async (req, res) => {
     const {boardId} = req.params;
     const {user, content} = req.body;
     const existBoard = await Boards.find({boardId})
 
     if (!existBoard.length) {
-        return res.status(400).json({success: false, erorrMessage: "해당 게시글은 존재하지 않습니다."})
+        return res.status(404).json({success: false, erorrMessage: "해당 게시글은 존재하지 않습니다."})
     }
 
     const last_comment = await Comments.findOne().sort("-commentId").exec()
@@ -33,33 +39,42 @@ router.post("/:boardId", async (req, res) => {
 
     const createdComment = await Comments.create({commentId, user, content, boardId});     // {}
 
-    res.status(200).json({success: true, comment: createdComment})
+    res.status(200).json({success: true, message:"댓글을 생성하였습니다."})
 })
 
 // 경로 : localhost:3000/comments/:commentId        해당 댓글 수정
 router.put('/:commentId', async (req, res) => {
     const {commentId} = req.params;
     const {content} = req.body;
-    
     const existComment = await Comments.find({commentId})
 
-    if (existComment.length) {
+    if (!content) {
+        return res.status(400).json({success: false, erorrMessage: "수정할 댓글 내용을 입력해 주세요."})
+    }
+
+    if (!existComment.length) {
+        return res.status(404).json({success: false, erorrMessage: "해당 댓글은 존재하지 않습니다."})
+    } else {
         await Comments.updateOne({commentId: commentId}, {$set: {content: content}})
     }
 
-    res.status(200).json({success: true})
+    res.status(200).json({success: true, message:"댓글을 수정하였습니다."})
 })
 
 // 경로 : localhost:3000/comments/:commentId        해당 댓글 삭제
 router.delete("/:commentId", async (req, res) => {
     const {commentId} = req.params;
-    const existComment = await Comments.find({commentId})
+    const existComment = await Comments.find({commentId})   // 있으면 [{}],  없으면 []
 
-    if (existComment.length) {
+    if (!existComment.length) {
+        console.log(existComment);
+        return res.status(404).json({success: false, erorrMessage: "해당 댓글은 존재하지 않습니다."})
+    } else {
+        console.log(existComment);
         await Comments.deleteOne({commentId})
     }
 
-    res.json({success: true})
+    res.json({success: true, message: "댓글을 삭제하였습니다."})
 })
 
 
