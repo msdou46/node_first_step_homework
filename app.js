@@ -14,7 +14,7 @@ app.use("/posts", [boardsRouter], [commentsRouter]);
 
 
 app.get('/', (req, res) => {
-    res.send("Hello World! I'm 김민수B(노드4기)");
+    res.send("Hello World! I'm 노드4기");
 });
 
 app.listen(port, () => {
